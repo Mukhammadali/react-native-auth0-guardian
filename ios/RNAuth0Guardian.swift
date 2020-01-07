@@ -79,8 +79,8 @@ extension UserDefaults {
 }
 
 
-@objc(RNAuth0Guardian)
-class RNAuth0Guardian: NSObject {
+@objc(Auth0Guardian)
+class Auth0Guardian: NSObject {
   var signingKey: KeychainRSAPrivateKey?
   
   override init() {
