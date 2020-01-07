@@ -79,8 +79,8 @@ extension UserDefaults {
 }
 
 
-@objc(Auth0Guardian)
-class Auth0Guardian: NSObject {
+@objc(RNAuth0Guardian)
+class RNAuth0Guardian: NSObject {
   var signingKey: KeychainRSAPrivateKey?
   
   override init() {
@@ -95,7 +95,7 @@ class Auth0Guardian: NSObject {
   
   
   @objc
-  func enroll(_ enrollmentURI: NSString, deviceToken: NSString, auth0Domain: NSString){
+    func enroll(_ enrollmentURI: NSString, deviceToken: NSString, auth0Domain: NSString, callback: @escaping RCTResponseSenderBlock){
     let enrollmentUri = enrollmentURI as String
     let deviceTokenString = deviceToken as String
     let domain = auth0Domain as String
@@ -122,9 +122,11 @@ class Auth0Guardian: NSObject {
               )
               UserDefaults.standard.save(customObject: clonedData, inKey: "ENROLLED_DEVICE")
               UserDefaults.standard.set(domain, forKey: "AUTH0_DOMAIN")
+              callback([NSNull(), enrolledDevice.id])
               break
             case .failure(let cause):
               print("ENROLL FAILED: ", cause)
+              callback([cause, NSNull()])
               break
             }
         }
@@ -135,7 +137,7 @@ class Auth0Guardian: NSObject {
   }
   
   @objc
-  func allow(_ userInfo: NSDictionary){
+  func allow(_ userInfo: NSDictionary, callback: @escaping RCTResponseSenderBlock){
     let domain = UserDefaults.standard.value(forKey: "AUTH0_DOMAIN") as! String
     let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: "ENROLLED_DEVICE")!
     let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
@@ -148,9 +150,11 @@ class Auth0Guardian: NSObject {
           switch result {
           case .success:
             print("ALLOWED SUCCESSFULY!")
+            callback([NSNull(), true])
             break
           case .failure(let cause):
             print("ALLOW FAILED!", cause)
+            callback([cause, NSNull()])
             break
           }
       }
@@ -158,7 +162,7 @@ class Auth0Guardian: NSObject {
   }
   
   @objc
-  func reject(_ userInfo: [AnyHashable : Any]) {
+    func reject(_ userInfo: [AnyHashable : Any], callback: @escaping RCTResponseSenderBlock) {
       let domain = UserDefaults.standard.value(forKey: "AUTH0_DOMAIN") as! String
       let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: "ENROLLED_DEVICE")!
       let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
@@ -171,9 +175,11 @@ class Auth0Guardian: NSObject {
              switch result {
              case .success:
                print("REJECTED SUCCESSFULLY!")
+               callback([NSNull(), true])
                break
              case .failure(let cause):
                print("REJECT FAILED!", cause)
+               callback([cause, NSNull()])
                break
              }
        }
@@ -181,7 +187,7 @@ class Auth0Guardian: NSObject {
    }
   
   @objc
-  func unenroll(_ deviceToken: NSString) {
+  func unenroll(_ deviceToken: NSString, callback: @escaping RCTResponseSenderBlock) {
     let domain = UserDefaults.standard.value(forKey: "AUTH0_DOMAIN") as! String
     let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: "ENROLLED_DEVICE")!
     let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
@@ -194,9 +200,11 @@ class Auth0Guardian: NSObject {
         switch result {
         case .success:
           print("UNENROLLED SUCCESSFULLY!")
+          callback([NSNull(), true])
           break
         case .failure(let cause):
           print("UNENROLL FAILED!", cause)
+          callback([cause, NSNull()])
           break
         }
     }

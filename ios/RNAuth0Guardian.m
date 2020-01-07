@@ -1,19 +1,14 @@
 
-#import "RNAuth0Guardian.h"
+#import "React/RCTBridgeModule.h"
 
-@implementation RNAuth0Guardian
+@interface RCT_EXTERN_MODULE(RNAuth0Guardian, NSObject)
 
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
-RCT_EXPORT_MODULE()
 
-RCT_EXTERN_METHOD(enroll:(NSString *)enrollmentURI deviceToken:(NSString *)deviceToken auth0Domain:(NSString *)auth0Domain)
+RCT_EXTERN_METHOD(enroll:(NSString *)enrollmentURI deviceToken:(NSString *)deviceToken auth0Domain:(NSString *)auth0Domain callback:(RCTResponseSenderBlock)callback)
 
-RCT_EXTERN_METHOD(allow:(NSDictionary *)userInfo)
-RCT_EXTERN_METHOD(reject:(NSDictionary *)userInfo)
-RCT_EXTERN_METHOD(unenroll:(NSString *)deviceToken)
+RCT_EXTERN_METHOD(allow:(NSDictionary *)userInfo callback:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(reject:(NSDictionary *)userInfo callback:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(unenroll:(NSString *)deviceToken callback:(RCTResponseSenderBlock)callback)
 
 @end
   

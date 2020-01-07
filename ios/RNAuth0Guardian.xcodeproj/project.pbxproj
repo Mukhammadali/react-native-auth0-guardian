@@ -27,7 +27,7 @@
 		134814201AA4EA6300B7C361 /* libRNAuth0Guardian.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNAuth0Guardian.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		15432C9F23C4AB33003F99A1 /* RNAuth0Guardian-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNAuth0Guardian-Bridging-Header.h"; sourceTree = "<group>"; };
 		15432CA023C4AB33003F99A1 /* RNAuth0Guardian.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAuth0Guardian.swift; sourceTree = "<group>"; };
-		B3E7B5881CC2AC0600A0062D /* RNAuth0Guardian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNAuth0Guardian.h; sourceTree = "<group>"; };
+		15432CAC23C52413003F99A1 /* RNAuth0Guardian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RNAuth0Guardian.h; path = ../../../.Trash/RNAuth0Guardian.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNAuth0Guardian.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNAuth0Guardian.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,7 +53,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				B3E7B5881CC2AC0600A0062D /* RNAuth0Guardian.h */,
+				15432CAC23C52413003F99A1 /* RNAuth0Guardian.h */,
 				B3E7B5891CC2AC0600A0062D /* RNAuth0Guardian.m */,
 				15432CA023C4AB33003F99A1 /* RNAuth0Guardian.swift */,
 				134814211AA4EA7D00B7C361 /* Products */,
