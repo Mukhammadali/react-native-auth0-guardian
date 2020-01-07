@@ -1,16 +1,19 @@
 {
   "name": "react-native-auth0-guardian",
   "version": "1.0.0",
-  "description": "",
+  "description": "React native bridge for Auth0 Guardian",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "homepage": "https://github.com/mukhammadali/react-native-auth0-guardian.git",
   "keywords": [
-    "react-native"
+    "react-native",
+    "auth0-guardian",
+    "react-native-auth0-guardian"
   ],
-  "author": "",
-  "license": "",
+  "author": "Mukhammad Ali",
+  "license": "MIT",
   "peerDependencies": {
     "react-native": "^0.41.2"
   },
