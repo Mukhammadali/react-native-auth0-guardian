@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.homepage       = package['homepage']
   s.platform     = :ios, "10.0"
   s.source       = { :git => "https://github.com/Mukhammadali/react-native-auth0-guardian.git", :tag => "master" }
-  s.source_files  = "ios/**/*.{h,m}"
+  s.source_files  = "ios/**/*.{h,m,swift}"
   s.requires_arc = true
   s.preserve_paths = 'LICENSE', 'README.md', 'package.json', 'index.js'
 
