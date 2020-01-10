@@ -122,7 +122,7 @@ class RNAuth0Guardian: NSObject {
               )
               UserDefaults.standard.save(customObject: clonedData, inKey: "ENROLLED_DEVICE")
               UserDefaults.standard.set(domain, forKey: "AUTH0_DOMAIN")
-              callback([NSNull(), enrolledDevice.id])
+              callback([NSNull(), enrolledDevice.totp?.base32Secret])
               break
             case .failure(let cause):
               print("ENROLL FAILED: ", cause)
