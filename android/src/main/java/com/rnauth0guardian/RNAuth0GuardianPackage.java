@@ -1,5 +1,5 @@
 
-package com.reactlibrary;
+package com.rnauth0guardian;
 
 import java.util.Arrays;
 import java.util.Collections;
