@@ -18,7 +18,7 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "RNAuth0GuardianAndroid";
+    return "RNAuth0Guardian";
   }
 
   @ReactMethod
