@@ -35,6 +35,6 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.auth0.android:guardian-sdk:0.4.0'
+    implementation 'com.auth0.android:guardian:0.4.0'
 }
   
