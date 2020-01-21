@@ -123,10 +123,18 @@ class RNAuth0Guardian: NSObject {
     @objc
     func getTOTP(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
         if (self.enrolledDevice != nil) {
-            let totp: TOTP = try! Guardian.totp(parameters: (self.enrolledDevice?.totp!)!)
-            resolve(totp)
+            let totpInt: Int = try! Guardian.totp(parameters: self.enrolledDevice!.totp!).code();
+            var totpString = String(totpInt)
+            if(totpString.isEmpty == false && totpString.count <= 5) {
+                for _ in 1...6 - totpString.count {
+                    totpString = "0" + totpString
+                }
+            }
+            print("TOTP", totpString)
+            print("ENROLLED_DEVICE_TOTP", self.enrolledDevice!.totp!)
+            resolve(totpString)
         } else {
-             reject("DEVICE_NOT_ENRROLED", "Device is not enrolled yet!", nil)
+            reject("DEVICE_NOT_ENRROLED", "Device is not enrolled yet!", nil)
         }
     }
   
