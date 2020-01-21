@@ -117,6 +117,19 @@ class RNAuth0Guardian: NSObject {
             resolve(true)
         }
     }
+    
+    @objc
+    func getTOTP(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
+        do {
+            if (self.enrolledDevice != nil) {
+                let totp: TOTP = try! Guardian.totp(parameters: self.enrolledDevice.totp)
+                resolve(totp)
+            }
+            
+        } catch {
+            reject(error)
+        }
+    }
   
     @objc
     func enroll(_ enrollmentURI: NSString, deviceToken: NSString, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
@@ -144,7 +157,7 @@ class RNAuth0Guardian: NSObject {
                   let clonedData = CustomEnrolledDevice(id: enrolledDevice.id, userId: enrolledDevice.userId, deviceToken: enrolledDevice.deviceToken, notificationToken: enrolledDevice.notificationToken, totp: enrolledDevice.totp
                   )
                   UserDefaults.standard.save(customObject: clonedData, inKey: ENROLLED_DEVICE)
-                 resolve(enrolledDevice.totp?.base32Secret)
+                  resolve(enrolledDevice.totp?.base32Secret)
                   break
                 case .failure(let cause):
                   print("ENROLL FAILED: ", cause)
@@ -191,12 +204,9 @@ class RNAuth0Guardian: NSObject {
     @objc
     func reject(_ userInfo: [AnyHashable : Any], resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE)!
-            let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
-            )
             if let notification = Guardian.notification(from: userInfo) {
                 Guardian
-                    .authentication(forDomain: self.domain, device: enrolledDevice)
+                    .authentication(forDomain: self.domain, device: self.enrolledDevice)
                     .reject(notification: notification)
                     .start { result in
                          switch result {
@@ -217,14 +227,11 @@ class RNAuth0Guardian: NSObject {
     }
   
     @objc
-    func unenroll(_ deviceToken: NSString, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func unenroll(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE)!
-            let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
-            )
             Guardian
                 .api(forDomain: self.domain)
-                .device(forEnrollmentId: enrolledDevice.id, token: enrolledDevice.deviceToken)
+                .device(forEnrollmentId: self.enrolledDevice.id, token: self.enrolledDevice.token)
                 .delete()
                 .start { result in
                     switch result {
