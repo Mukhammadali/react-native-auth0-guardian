@@ -1,4 +1,11 @@
 
+//
+//  RNAuth0GuardianPackage.java
+//  RNAuth0Guardian
+//
+//  Created by Mukhammad Ali on 2020/01/07.
+//  Copyright © 2020. All rights reserved.
+//
 package com.rnauth0guardian;
 
 import java.util.Arrays;

@@ -1,3 +1,10 @@
+//
+//  RNAuth0GuardianModule.java
+//  RNAuth0Guardian
+//
+//  Created by Mukhammad Ali on 2020/01/07.
+//  Copyright © 2020. All rights reserved.
+//
 
 package com.rnauth0guardian;
 
@@ -45,8 +52,6 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
 
   private ParcelableEnrollment getEnrollment(){
     String json = mPrefs.getString(ENROLLMENT, "");
-//    if(json == null) return null;
-//    ParcelableEnrollment obj = ;
     Log.e(TAG, json);
     return ParcelableEnrollment.fromJSON(json);
   }
@@ -64,8 +69,8 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
   public void initialize(String domain, Promise promise) {
     try {
       guardian = new Guardian.Builder()
-              .domain(domain)
-              .build();
+        .domain(domain)
+        .build();
       enrollment = getEnrollment();
       promise.resolve(true);
       Log.i("SAVED ENROLLMENT", enrollment.toJSON());
@@ -99,21 +104,21 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
       KeyPair keyPair = generateKeyPair();
       if(keyPair != null) {
         guardian
-                .enroll(enrollmentURI, device, keyPair)
-                .start(new Callback<Enrollment>() {
-                  @Override
-                  public void onSuccess(Enrollment response) {
-                    Log.i(TAG, "ENROLLED SUCCESSFULLY!");
-                    promise.resolve(response.getSecret());
-                    saveEnrollment(response);
-                  }
+          .enroll(enrollmentURI, device, keyPair)
+          .start(new Callback<Enrollment>() {
+            @Override
+            public void onSuccess(Enrollment response) {
+              Log.i(TAG, "ENROLLED SUCCESSFULLY!");
+              promise.resolve(response.getSecret());
+              saveEnrollment(response);
+            }
 
-                  @Override
-                  public void onFailure(Throwable exception) {
-                    Log.i(TAG, "ENROLL FAILED!");
-                    promise.reject(exception);
-                  }
-                });
+            @Override
+            public void onFailure(Throwable exception) {
+              Log.i(TAG, "ENROLL FAILED!");
+              promise.reject(exception);
+            }
+          });
       }
 
     } catch (Exception err){
@@ -146,20 +151,20 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
 
       if(enrollment != null) {
         guardian
-                .allow(notification, enrollment)
-                .start(new Callback<Void>() {
-                  @Override
-                  public void onSuccess(Void response) {
-                    Log.i(TAG, "ALLOWED SUCCESSFULLY");
-                    promise.resolve(true);
-                  }
+          .allow(notification, enrollment)
+          .start(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void response) {
+              Log.i(TAG, "ALLOWED SUCCESSFULLY");
+              promise.resolve(true);
+            }
 
-                  @Override
-                  public void onFailure(Throwable exception) {
-                    Log.e(TAG, "ALLOW FAILED!", exception);
-                    promise.reject(exception);
-                  }
-                });
+            @Override
+            public void onFailure(Throwable exception) {
+              Log.e(TAG, "ALLOW FAILED!", exception);
+              promise.reject(exception);
+            }
+          });
       } else {
         promise.reject(DEVICE_NOT_ENROLLED_EXCEPTION);
       }
@@ -177,20 +182,20 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
 
       if(enrollment != null) {
         guardian
-                .reject(notification, enrollment)
-                .start(new Callback<Void>() {
-                  @Override
-                  public void onSuccess(Void response) {
-                    Log.i(TAG, "REJECTED SUCCESSFULLY");
-                    promise.resolve(true);
-                  }
+          .reject(notification, enrollment)
+          .start(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void response) {
+              Log.i(TAG, "REJECTED SUCCESSFULLY");
+              promise.resolve(true);
+            }
 
-                  @Override
-                  public void onFailure(Throwable exception) {
-                    Log.e(TAG, "REJECT FAILED!", exception);
-                    promise.reject(exception);
-                  }
-                });
+            @Override
+            public void onFailure(Throwable exception) {
+              Log.e(TAG, "REJECT FAILED!", exception);
+              promise.reject(exception);
+            }
+          });
       } else {
         promise.reject(DEVICE_NOT_ENROLLED_EXCEPTION);
       }
@@ -205,20 +210,20 @@ public class RNAuth0GuardianModule extends ReactContextBaseJavaModule {
     try {
       if(enrollment != null){
         guardian
-                .delete(enrollment)
-                .start(new Callback<Void>() {
-                  @Override
-                  public void onSuccess(Void response) {
-                    Log.i(TAG, "UNENROLLED SUCCESSFULLY");
-                    promise.resolve(true);
-                  }
+          .delete(enrollment)
+          .start(new Callback<Void>() {
+            @Override
+            public void onSuccess(Void response) {
+              Log.i(TAG, "UNENROLLED SUCCESSFULLY");
+              promise.resolve(true);
+            }
 
-                  @Override
-                  public void onFailure(Throwable exception) {
-                    Log.e(TAG, "UNENROLL FAILED!", exception);
-                    promise.reject(exception);
-                  }
-                });
+            @Override
+            public void onFailure(Throwable exception) {
+              Log.e(TAG, "UNENROLL FAILED!", exception);
+              promise.reject(exception);
+            }
+          });
       } else {
         promise.reject(DEVICE_NOT_ENROLLED_EXCEPTION);
       }

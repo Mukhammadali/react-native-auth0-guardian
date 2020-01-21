@@ -3,7 +3,7 @@
 //  RNAuth0Guardian
 //
 //  Created by Mukhammad Ali on 2020/01/07.
-//  Copyright © 2020 Facebook. All rights reserved.
+//  Copyright © 2020. All rights reserved.
 //
 
 import Guardian
