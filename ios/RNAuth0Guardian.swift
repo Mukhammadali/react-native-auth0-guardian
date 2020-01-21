@@ -79,140 +79,173 @@ extension UserDefaults {
 }
 
 
+enum CustomError: Error {
+    case runtimeError(String)
+}
+
+
 @objc(RNAuth0Guardian)
 class RNAuth0Guardian: NSObject {
-  var signingKey: KeychainRSAPrivateKey?
-  
-  override init() {
-    super.init()
-    do {
-        self.signingKey = try KeychainRSAPrivateKey.new(with: "org.reactjs.native.example.PortalNow")
-    }
-    catch {
-      fatalError("Error in signingKey generation")
-    }
-  }
-  
-  
-  @objc
-    func enroll(_ enrollmentURI: NSString, deviceToken: NSString, auth0Domain: NSString, callback: @escaping RCTResponseSenderBlock){
-    let enrollmentUri = enrollmentURI as String
-    let deviceTokenString = deviceToken as String
-    let domain = auth0Domain as String
+    let AUTH0_DOMAIN = "AUTH0_DOMAIN"
+    let ENROLLED_DEVICE = "ENROLLED_DEVICE"
+    let ENROLLED_DEVICE_NULL_ERROR: CustomError = CustomError.runtimeError(<#T##String#>)
     
-    do {
-      let verificationKey = try signingKey!.verificationKey()
-      
-      if (deviceTokenString.isEmpty) {
-        print("DEVICE_TOKEN is not provided!")
-      } else if (enrollmentUri.isEmpty) {
-        print("ENROLLMENT_URI is not provided!")
-      } else {
-        Guardian
-        .enroll(forDomain: domain,
-                usingUri: enrollmentUri,
-                notificationToken: deviceTokenString,
-                signingKey: signingKey!,
-                verificationKey: verificationKey
-                )
-        .start { result in
-            switch result {
-            case .success(let enrolledDevice):
-              let clonedData = CustomEnrolledDevice(id: enrolledDevice.id, userId: enrolledDevice.userId, deviceToken: enrolledDevice.deviceToken, notificationToken: enrolledDevice.notificationToken, totp: enrolledDevice.totp
-              )
-              UserDefaults.standard.save(customObject: clonedData, inKey: "ENROLLED_DEVICE")
-              UserDefaults.standard.set(domain, forKey: "AUTH0_DOMAIN")
-              callback([NSNull(), enrolledDevice.totp?.base32Secret])
-              break
-            case .failure(let cause):
-              print("ENROLL FAILED: ", cause)
-              callback([cause, NSNull()])
-              break
+    var domain: String?
+    let enrolledDevice: EnrolledDevice?
+    var signingKey: KeychainRSAPrivateKey?
+    
+  
+    override init() {
+        super.init()
+    }
+    @objc
+    func initialize(_ auth0Domain: NSString, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        let domain = auth0Domain as String
+        if domain.isEmpty {
+            reject(Error("DOMAIN_NULL"))
+        } else {
+            self.domain = auth0Domain as String
+            let signingKey = try KeychainRSAPrivateKey.new(with: "org.reactjs.native.example.PortalNow")!
+            self.signingKey = signingKey
+            if let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE) ?? nil {
+                let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: signingKey, totp: retrievedData.totp
+                   )
+                self.enrolledDevice = enrolledDevice;
+                
             }
+           
+            resolve(true)
         }
-      }
-    } catch {
-      fatalError("Something went wrong in Enroll method ;( !")
     }
-  }
   
-  @objc
-  func allow(_ userInfo: NSDictionary, callback: @escaping RCTResponseSenderBlock){
-    let domain = UserDefaults.standard.value(forKey: "AUTH0_DOMAIN") as! String
-    let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: "ENROLLED_DEVICE")!
-    let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
-    )
-    if let notification = Guardian.notification(from: userInfo as! [AnyHashable : Any]) {
-      Guardian
-      .authentication(forDomain: domain, device: enrolledDevice)
-      .allow(notification: notification)
-      .start { result in
-          switch result {
-          case .success:
-            print("ALLOWED SUCCESSFULY!")
-            callback([NSNull(), true])
-            break
-          case .failure(let cause):
-            print("ALLOW FAILED!", cause)
-            callback([cause, NSNull()])
-            break
+    @objc
+    func enroll(_ enrollmentURI: NSString, deviceToken: NSString, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
+        let enrollmentUri = enrollmentURI as String
+        let deviceTokenString = deviceToken as String
+        
+        do {
+          let verificationKey = try signingKey!.verificationKey()
+          
+          if (deviceTokenString.isEmpty) {
+            reject(Error("DEVICE_TOKEN_NULL"))
+          } else if (enrollmentUri.isEmpty) {
+            reject(Error("ENROLLMENT_URI_NULL"))
+          } else {
+            Guardian
+                .enroll(forDomain: self.domain,
+                    usingUri: enrollmentUri,
+                    notificationToken: deviceTokenString,
+                    signingKey: signingKey!,
+                    verificationKey: verificationKey
+                    )
+            .start { result in
+                switch result {
+                case .success(let enrolledDevice):
+                  let clonedData = CustomEnrolledDevice(id: enrolledDevice.id, userId: enrolledDevice.userId, deviceToken: enrolledDevice.deviceToken, notificationToken: enrolledDevice.notificationToken, totp: enrolledDevice.totp
+                  )
+                  UserDefaults.standard.save(customObject: clonedData, inKey: ENROLLED_DEVICE)
+                 resolve(enrolledDevice.totp?.base32Secret)
+                  break
+                case .failure(let cause):
+                  print("ENROLL FAILED: ", cause)
+                 reject(cause)
+                  break
+                }
+            }
           }
-      }
-    }
-  }
-  
-  @objc
-    func reject(_ userInfo: [AnyHashable : Any], callback: @escaping RCTResponseSenderBlock) {
-      let domain = UserDefaults.standard.value(forKey: "AUTH0_DOMAIN") as! String
-      let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: "ENROLLED_DEVICE")!
-      let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
-      )
-     if let notification = Guardian.notification(from: userInfo) {
-       Guardian
-         .authentication(forDomain: domain, device: enrolledDevice)
-         .reject(notification: notification)
-         .start { result in
-             switch result {
-             case .success:
-               print("REJECTED SUCCESSFULLY!")
-               callback([NSNull(), true])
-               break
-             case .failure(let cause):
-               print("REJECT FAILED!", cause)
-               callback([cause, NSNull()])
-               break
-             }
-       }
-     }
-   }
-  
-  @objc
-  func unenroll(_ deviceToken: NSString, callback: @escaping RCTResponseSenderBlock) {
-    let domain = UserDefaults.standard.value(forKey: "AUTH0_DOMAIN") as! String
-    let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: "ENROLLED_DEVICE")!
-    let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
-    )
-    Guardian
-    .api(forDomain: domain)
-      .device(forEnrollmentId: enrolledDevice.id, token: enrolledDevice.deviceToken)
-    .delete()
-    .start { result in
-        switch result {
-        case .success:
-          print("UNENROLLED SUCCESSFULLY!")
-          callback([NSNull(), true])
-          break
-        case .failure(let cause):
-          print("UNENROLL FAILED!", cause)
-          callback([cause, NSNull()])
-          break
+        } catch {
+          reject(error)
         }
     }
-  }
   
-  @objc
-  static func requiresMainQueueSetup() -> Bool {
-    return true
-  }
+    @objc
+    func allow(_ userInfo: NSDictionary, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
+        do {
+            if (self.enrolledDevice != nil) {
+                if let notification = Guardian.notification(from: userInfo as! [AnyHashable : Any]) {
+                  Guardian
+                    .authentication(forDomain: self.domain, device: self.enrolledDevice)
+                    .allow(notification: notification)
+                    .start { result in
+                      switch result {
+                      case .success:
+                        print("ALLOWED SUCCESSFULY!")
+                        resolve(true)
+                        break
+                      case .failure(let cause):
+                        print("ALLOW FAILED!", cause)
+                        reject(cause)
+                        break
+                      }
+                    }
+                }
+            } else {
+                reject(ENROLLED_DEVICE_NULL_ERROR)
+            }
+            
+        } catch {
+            reject(error)
+        }
+    }
+  
+    @objc
+    func reject(_ userInfo: [AnyHashable : Any], resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        do {
+            let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE)!
+            let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
+            )
+            if let notification = Guardian.notification(from: userInfo) {
+                Guardian
+                    .authentication(forDomain: self.domain, device: enrolledDevice)
+                    .reject(notification: notification)
+                    .start { result in
+                         switch result {
+                             case .success:
+                               print("REJECTED SUCCESSFULLY!")
+                               resolve(true)
+                               break
+                             case .failure(let cause):
+                               print("REJECT FAILED!", cause)
+                               reject(cause)
+                               break
+                         }
+                    }
+            }
+        } catch {
+            reject(error)
+        }
+    }
+  
+    @objc
+    func unenroll(_ deviceToken: NSString, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        do {
+            let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE)!
+            let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: self.signingKey!, totp: retrievedData.totp
+            )
+            Guardian
+                .api(forDomain: self.domain)
+                .device(forEnrollmentId: enrolledDevice.id, token: enrolledDevice.deviceToken)
+                .delete()
+                .start { result in
+                    switch result {
+                    case .success:
+                      print("UNENROLLED SUCCESSFULLY!")
+                      resolve(true)
+                      break
+                    case .failure(let cause):
+                      print("UNENROLL FAILED!", cause)
+                      reject(cause)
+                      break
+                    }
+                }
+        } catch {
+            reject(error)
+        }
+    }
+  
+    @objc
+    static func requiresMainQueueSetup() -> Bool {
+        return true
+    }
 }
 
