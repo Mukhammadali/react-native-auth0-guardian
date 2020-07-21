@@ -1,6 +1,6 @@
 {
   "name": "react-native-auth0-guardian",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React native bridge for Auth0 Guardian",
   "main": "index.js",
   "scripts": {
