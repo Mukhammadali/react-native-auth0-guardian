@@ -100,12 +100,13 @@ class RNAuth0Guardian: NSObject {
     @objc
     func initialize(_ auth0Domain: NSString,  resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         let domain = auth0Domain as String
+        let bundleID = Bundle.main.bundleIdentifier
         if domain.isEmpty {
             reject("DOMAIN_NULL", "Domain is null", nil)
         } else {
             self.domain = auth0Domain as String
             do {
-                let signingKey = try KeychainRSAPrivateKey.new(with: "org.reactjs.native.example.PortalNow")
+                let signingKey = try KeychainRSAPrivateKey.new(with: bundleID)
                 self.signingKey = signingKey
                  if let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE) ?? nil {
                      let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: signingKey, totp: retrievedData.totp
@@ -130,8 +131,6 @@ class RNAuth0Guardian: NSObject {
                     totpString = "0" + totpString
                 }
             }
-            print("TOTP", totpString)
-            print("ENROLLED_DEVICE_TOTP", self.enrolledDevice!.totp!)
             resolve(totpString)
         } else {
             reject("DEVICE_NOT_ENRROLED", "Device is not enrolled yet!", nil)
@@ -189,7 +188,6 @@ class RNAuth0Guardian: NSObject {
                 .start { result in
                   switch result {
                   case .success:
-                    print("ALLOWED SUCCESSFULY!")
                     resolve(true)
                     break
                   case .failure(let cause):
@@ -215,7 +213,6 @@ class RNAuth0Guardian: NSObject {
                 .start { result in
                      switch result {
                          case .success:
-                           print("REJECTED SUCCESSFULLY!")
                            resolve(true)
                            break
                          case .failure(let cause):
@@ -238,7 +235,6 @@ class RNAuth0Guardian: NSObject {
             .start { result in
                 switch result {
                 case .success:
-                  print("UNENROLLED SUCCESSFULLY!")
                   resolve(true)
                   break
                 case .failure(let cause):

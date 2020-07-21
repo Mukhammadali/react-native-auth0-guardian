@@ -1,7 +1,7 @@
 
-import { NativeModules } from 'react-native';
+const NativeModules = require('react-native').NativeModules;
 
-const { RNAuth0Guardian } = NativeModules;
+const Auth0Guardian = NativeModules.RNAuth0Guardian;
 
-export default RNAuth0Guardian;
+module.exports = Auth0Guardian
 

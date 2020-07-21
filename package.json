@@ -10,12 +10,27 @@
   "keywords": [
     "react-native",
     "auth0-guardian",
-    "react-native-auth0-guardian"
+    "react-native-auth0-guardian",
+    "guardian-sdk",
+    "auth0-guardian-sdk",
+    "auth0guardian",
+    "react-native-auth0"
   ],
-  "author": "Mukhammad Ali",
+  "author": {
+    "name":"Mukhammad Ali",
+    "email": "toshboev7@gmail.com",
+    "url": "http://mukhammadali.com"
+  },
+  "bugs": {
+    "url": "https://github.com/mukhammadali/react-native-auth0-guardian/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:mukhammadali/react-native-auth0-guardian.git"
+  },
   "license": "MIT",
   "peerDependencies": {
-    "react-native": "^0.41.2"
+    "react-native": ">=0.41"
   },
   "dependencies": {}
 }
