@@ -1,9 +1,21 @@
 
-# react-native-auth0-guardian
+# React Native bridge for auth0 guardian
 
-## Get library
+[![npm version](https://badge.fury.io/js/react-native-auth0-guardian.svg?update=9)](http://badge.fury.io/js/react-native-auth0-guardian)
+[![npm downloads](https://img.shields.io/npm/dm/react-native-push-auth0-guardian.svg?update=9)](http://badge.fury.io/js/react-native-auth0-guardian)
 
-`$ npm install react-native-auth0-guardian --save`
+
+## Installation
+
+### NPM
+
+`npm install --save react-native-auth0-guardian`
+
+### Yarn
+
+`yarn add react-native-auth0-guardian`
+
+
 
 ### Linking the library
 
@@ -15,6 +27,7 @@
 
 Use CocoaPods to add the native RNAuth0Guardian to your project:   
 `$ npx pod-install`
+
 
 
 ### Manual installation
@@ -128,5 +141,10 @@ try {
 }
 ```
 
+
+## Native libraries used:
+
+[Auth0 Guardian Java](https://github.com/auth0/Guardian.java)   
+[Auth0 Guardian Swift](https://github.com/auth0/Guardian.swift)
 
 
