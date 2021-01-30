@@ -28,9 +28,12 @@
 Use CocoaPods to add the native RNAuth0Guardian to your project:   
 `$ npx pod-install`
 
-
-
 ### Manual installation
+<details>
+<summary>Show Steps</summary>
+<br>
+
+
 
 
 #### iOS
@@ -54,6 +57,7 @@ Use CocoaPods to add the native RNAuth0Guardian to your project:
   	```
       implementation project(':react-native-auth0-guardian')
   	```
+</details>
 
 ## Usage
 ### Initialization
