@@ -106,7 +106,7 @@ class RNAuth0Guardian: NSObject {
         } else {
             self.domain = auth0Domain as String
             do {
-                let signingKey = try KeychainRSAPrivateKey.new(with: bundleID)
+                let signingKey = try KeychainRSAPrivateKey.new(with: bundleID!)
                 self.signingKey = signingKey
                  if let retrievedData = UserDefaults.standard.retrieve(object: CustomEnrolledDevice.self, fromKey: ENROLLED_DEVICE) ?? nil {
                      let enrolledDevice = EnrolledDevice(id: retrievedData.id, userId: retrievedData.userId, deviceToken: retrievedData.deviceToken, notificationToken: retrievedData.notificationToken, signingKey: signingKey, totp: retrievedData.totp
