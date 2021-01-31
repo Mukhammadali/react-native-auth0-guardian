@@ -12,7 +12,9 @@
   "dependencies": {
     "react": "16.13.1",
     "react-native": "0.63.1",
-    "react-native-auth0-guardian": "^1.0.1"
+    "react-native-auth0-guardian": "^1.0.2",
+    "@react-native-community/push-notification-ios": "^1.4.0",
+    "react-native-ios-notification-actions": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",

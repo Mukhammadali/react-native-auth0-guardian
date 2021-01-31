@@ -17,7 +17,7 @@
     "react-native-auth0"
   ],
   "author": {
-    "name": "Mukhammad Ali",
+    "name": "Muhammad Ali",
     "email": "toshboev7@gmail.com",
     "url": "http://mukhammadali.com"
   },
@@ -34,9 +34,5 @@
   "license": "MIT",
   "peerDependencies": {
     "react-native": ">=0.41"
-  },
-  "dependencies": {
-    "@react-native-community/push-notification-ios": "^1.4.0",
-    "react-native-ios-notification-actions": "^1.0.1"
   }
 }
