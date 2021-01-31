@@ -1118,6 +1118,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
+"@react-native-community/push-notification-ios@^1.4.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/push-notification-ios/-/push-notification-ios-1.8.0.tgz#7d43cb37b9e644ff3069aafa91befe71688a2dc4"
+  integrity sha512-vxvkeampafjmtDoQBN8Q4azP21l6cMX93+OQZemyIWZmG++OjCVDQVitobf/kWLm5zyGwdylejbpMGo75qo7rA==
+  dependencies:
+    invariant "^2.2.4"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"
@@ -5466,10 +5473,15 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-native-auth0-guardian@^1.0.1:
+react-native-auth0-guardian@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-auth0-guardian/-/react-native-auth0-guardian-1.0.2.tgz#c886e0a4a8ee23dd03a7e54f6f3aeb42921c0380"
+  integrity sha512-fYY7eSUT0a5vLafmVbdVQXe+XdU/2Q4lyQN1u1gW1PcYlFCRUCuZxS8ridVEMRmSRkcMhyN07wiqnCcanm7JoA==
+
+react-native-ios-notification-actions@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-auth0-guardian/-/react-native-auth0-guardian-1.0.1.tgz#d88fabea7046315da84d33004ced6b084e5467f6"
-  integrity sha512-pcK/Kr87co4uVYx7G8XvgcnFDDf+wXKCtMk7ZZamLnBf88KodFqKz3vS3Fxh1NAKMBjagIjqNvKdwvhIVYY6PA==
+  resolved "https://registry.yarnpkg.com/react-native-ios-notification-actions/-/react-native-ios-notification-actions-1.0.1.tgz#dc394e428e425921562f9e4b9833c0de9c85d630"
+  integrity sha1-3DlOQo5CWSFWL55LmDPA3pyF1jA=
 
 react-native@0.63.1:
   version "0.63.1"
