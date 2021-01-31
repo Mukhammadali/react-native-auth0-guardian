@@ -2,8 +2,7 @@
 # React Native Auth0 Guardian (iOS & Android)
 
 [![npm version](https://badge.fury.io/js/react-native-auth0-guardian.svg?update=9)](http://badge.fury.io/js/react-native-auth0-guardian)
-[![npm downloads](https://img.shields.io/npm/dm/react-native-push-auth0-guardian.svg?update=9)](http://badge.fury.io/js/react-native-auth0-guardian)
-
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 
 ## Installation
 
