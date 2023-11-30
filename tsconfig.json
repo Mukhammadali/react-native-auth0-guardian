@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "." ,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+    },
+    "pretty": true,
+    "typeRoots": ["node_modules/@types", "./types"]
+  },
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "include": ["node_modules/@types/*", "src/**/*", "types/**/*", "./"],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js", ".eslintrc.js"]
+}
